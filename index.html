@@ -1,0 +1,287 @@
+import React, { useState } from 'react';
+import { 
+  Sparkles, 
+  Brain, 
+  CheckCircle2, 
+  Clock, 
+  Calendar, 
+  Star,
+  Cpu,
+  Wifi,
+  Globe,
+  Calculator,
+  Coffee,
+  BookOpen,
+  Circle
+} from 'lucide-react';
+
+const habits = [
+  { time: 'Morning (1 Hour)', title: 'Formula Recall', desc: 'Write down formulas from memory, check notes, correct mistakes.', icon: Brain, color: 'text-purple-600', bg: 'bg-purple-100' },
+  { time: 'Evening (30 Mins)', title: 'Wrap-up Review', desc: 'Quick review of the formulas you struggled with in the morning.', icon: Star, color: 'text-pink-600', bg: 'bg-pink-100' }
+];
+
+const phase1 = [
+  { date: 'March 1', subject: 'EST & GEAS', title: 'Signals & Sciences', icon: Wifi, tasks: [
+    '🧠 AM: Formula Recall (1 Hour)',
+    '☀️ AM: Lecture - Trans & Antenna 4',
+    '☀️ AM: 2 EST Refreshers',
+    '☀️ AM: 7 EST Mini-Exams',
+    '🌙 PM: Lecture - Physics & Comprog',
+    '🌙 PM: 2 GEAS Refreshers',
+    '🌙 PM: 7 GEAS Mini-Exams'
+  ] },
+  { date: 'March 2', subject: 'Math & Elecs', title: 'Numbers & Circuits', icon: Calculator, tasks: [
+    '🧠 AM: Formula Recall (1 Hour)',
+    '☀️ AM: Lecture - Admath 1 & 2',
+    '☀️ AM: 7 Math Mini-Exams',
+    '🌙 PM: Lecture - ESD & ECAD 1',
+    '🌙 PM: 1 Elecs Refresher',
+    '🌙 PM: 7 Elecs Mini-Exams'
+  ] },
+  { date: 'March 3', subject: 'EST & Elecs', title: 'Comms & Hardware', icon: Cpu, tasks: [
+    '🧠 AM: Formula Recall (1 Hour)',
+    '☀️ AM: Lecture - Prin. of Comms & Signals',
+    '☀️ AM: 2 EST Refreshers',
+    '☀️ AM: 7 EST Mini-Exams',
+    '🌙 PM: Lecture - ECAD 2 & Microcontrollers',
+    '🌙 PM: 1 Elecs Refresher',
+    '🌙 PM: 7 Elecs Mini-Exams'
+  ] },
+  { date: 'March 4', subject: 'Math & GEAS', title: 'Calculus & Concepts', icon: Globe, tasks: [
+    '🧠 AM: Formula Recall (1 Hour)',
+    '☀️ AM: Lecture - EDA 1 & 2',
+    '☀️ AM: 7 Math Mini-Exams',
+    '🌙 PM: Rescan - Econ & Mat Sci',
+    '🌙 PM: 2 GEAS Refreshers',
+    '🌙 PM: 7 GEAS Mini-Exams'
+  ] },
+  { date: 'March 5', subject: 'EST & GEAS', title: 'Signals & Sciences', icon: Wifi, tasks: [
+    '🧠 AM: Formula Recall (1 Hour)',
+    '☀️ AM: Final 2 EST Refreshers',
+    '☀️ AM: 8 EST Mini-Exams',
+    '☀️ AM: 1 EST Preboard',
+    '🌙 PM: Rescan - Mgt, Env Sci & Chem',
+    '🌙 PM: 2 GEAS Refreshers',
+    '🌙 PM: 8 GEAS Mini-Exams'
+  ] },
+  { date: 'March 6', subject: 'Math & Elecs', title: 'Numbers & Circuits', icon: Calculator, tasks: [
+    '🧠 AM: Formula Recall (1 Hour)',
+    '☀️ AM: Revisit - Feedback & Signals',
+    '☀️ AM: 1 Math Refresher',
+    '☀️ AM: 8 Math Mini-Exams',
+    '🌙 PM: Lecture - Logic Circuit & Feedback',
+    '🌙 PM: 2 Elecs Refreshers',
+    '🌙 PM: 8 Elecs Mini-Exams'
+  ] },
+  { date: 'March 7', subject: 'EST & Elecs', title: 'Preboard Push (Part 1)', icon: CheckCircle2, tasks: [
+    '🧠 AM: Formula Recall (1 Hour)',
+    '☀️ AM: Remaining 8 EST Mini-Exams',
+    '☀️ AM: 1 EST Preboard',
+    '🌙 PM: Remaining 8 Elecs Mini-Exams',
+    '🌙 PM: 2 Elecs Preboards'
+  ] },
+  { date: 'March 8', subject: 'Math & GEAS', title: 'Preboard Push (Part 2)', icon: CheckCircle2, tasks: [
+    '🧠 AM: Formula Recall (1 Hour)',
+    '☀️ AM: Remaining 8 Math Mini-Exams',
+    '☀️ AM: 2 Math Preboards',
+    '🌙 PM: Remaining 8 GEAS Mini-Exams',
+    '🌙 PM: 2 GEAS Preboards'
+  ] },
+  { date: 'March 9', subject: 'All Subjects', title: 'Buffer & Wrap Up', icon: Coffee, tasks: [
+    '🧠 AM: Formula Recall (1 Hour)',
+    '☀️ AM: Finish any missed Preboards',
+    '☀️ AM: Finish any missed Mini-Exams',
+    '🌙 PM: Light review of weakest topics before Phase 2'
+  ] }
+];
+
+const phase2 = [
+  { date: 'March 10', subject: 'Math', title: 'Math Mastery', tasks: ['🧠 AM: Formula Recall (1 Hour)', 'Read & analyze Math Refreshers 1-6', 'Focus on problem setup/solvers'] },
+  { date: 'March 11', subject: 'GEAS', title: 'GEAS Mastery', tasks: ['🧠 AM: Formula Recall (1 Hour)', 'Read & analyze GEAS Refreshers 1-6', 'Drill conceptual questions & terms'] },
+  { date: 'March 12', subject: 'EST', title: 'EST Mastery', tasks: ['🧠 AM: Formula Recall (1 Hour)', 'Read & analyze EST Refreshers 1-6', 'Review transmission formulas'] },
+  { date: 'March 13', subject: 'Elecs', title: 'Electronics Mastery', tasks: ['🧠 AM: Formula Recall (1 Hour)', 'Read & analyze Elecs Refreshers 1-6', 'Circuit analysis review'] },
+  { date: 'March 14', subject: 'All', title: 'Cross-Subject Synthesis', tasks: ['🧠 AM: Formula Recall (1 Hour)', 'Rescan the 2 hardest refreshers from EACH subject', 'Massive brain-dump of all formulas on blank paper'] },
+  { date: 'March 15', subject: 'Review', title: 'Weak Point Focus', tasks: ['🧠 AM: Formula Recall (1 Hour)', 'Review shaky topics/terms/calculator techniques', 'Keep it light. NO new concepts today.'] },
+  { date: 'March 16', subject: 'Rest', title: 'Rest & Logistics', tasks: ['🧠 AM: Formula Recall (Max 2 hours)', 'Prepare NOA, pencils, calculator, ID, snacks', 'Rest your brain!'] },
+];
+
+const getSubjectColor = (subject) => {
+  switch (subject) {
+    case 'Math': return 'bg-blue-100 text-blue-700 border-blue-200';
+    case 'GEAS': return 'bg-emerald-100 text-emerald-700 border-emerald-200';
+    case 'EST': return 'bg-orange-100 text-orange-700 border-orange-200';
+    case 'Elecs': return 'bg-purple-100 text-purple-700 border-purple-200';
+    case 'EST & GEAS': return 'bg-teal-100 text-teal-700 border-teal-200';
+    case 'Math & Elecs': return 'bg-indigo-100 text-indigo-700 border-indigo-200';
+    case 'EST & Elecs': return 'bg-fuchsia-100 text-fuchsia-700 border-fuchsia-200';
+    case 'Math & GEAS': return 'bg-cyan-100 text-cyan-700 border-cyan-200';
+    default: return 'bg-pink-100 text-pink-700 border-pink-200';
+  }
+};
+
+export default function App() {
+  const [completedTasks, setCompletedTasks] = useState(new Set());
+
+  const toggleTask = (taskId) => {
+    setCompletedTasks(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(taskId)) {
+        newSet.delete(taskId);
+      } else {
+        newSet.add(taskId);
+      }
+      return newSet;
+    });
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-pink-100 text-slate-800 p-4 md:p-8 font-sans selection:bg-pink-200">
+      <div className="max-w-5xl mx-auto space-y-12">
+        
+        {/* Header Section */}
+        <header className="text-center space-y-4 pt-8 pb-4">
+          <div className="inline-flex items-center justify-center p-3 bg-white rounded-full shadow-sm mb-4 border border-pink-100">
+            <Sparkles className="w-6 h-6 text-pink-400 mr-2" />
+            <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-500 tracking-wide uppercase text-sm">
+              Road to Becoming an Engineer THIS MARCH 2026!
+            </span>
+            <Sparkles className="w-6 h-6 text-purple-400 ml-2" />
+          </div>
+          <h1 className="text-4xl md:text-5xl font-extrabold text-purple-900 tracking-tight">
+            Engr. <span className="text-pink-500">Kiana Mae Lumagui, ECT.</span>
+          </h1>
+          <p className="text-purple-600/80 max-w-2xl mx-auto font-medium text-lg">
+            16 days to go! Clearing the backlog, crushing the refreshers, and mastering those formulas. 🌸✨
+          </p>
+        </header>
+
+        {/* Daily Non-Negotiables */}
+        <section className="bg-white/60 backdrop-blur-md border-2 border-white rounded-3xl p-6 md:p-8 shadow-[0_8px_30px_rgb(236,72,153,0.1)]">
+          <div className="flex items-center gap-3 mb-6">
+            <Calendar className="w-7 h-7 text-pink-500" />
+            <h2 className="text-2xl font-bold text-purple-900">Daily Non-Negotiables</h2>
+          </div>
+          <div className="grid md:grid-cols-2 gap-4">
+            {habits.map((habit, idx) => (
+              <div key={idx} className={`${habit.bg} border border-white rounded-2xl p-5 flex gap-4 transition-transform hover:-translate-y-1 duration-300 shadow-sm`}>
+                <div className={`${habit.color} bg-white rounded-xl p-3 h-fit shadow-sm`}>
+                  <habit.icon className="w-6 h-6" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <Clock className={`w-4 h-4 ${habit.color}`} />
+                    <span className={`font-semibold text-sm ${habit.color}`}>{habit.time}</span>
+                  </div>
+                  <h3 className="font-bold text-slate-800 text-lg mb-1">{habit.title}</h3>
+                  <p className="text-slate-600 text-sm leading-relaxed">{habit.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Phase 1 */}
+        <section>
+          <div className="mb-8 pl-4 border-l-4 border-pink-400">
+            <h2 className="text-3xl font-bold text-purple-900">Phase 1: Alternating Sprint</h2>
+            <p className="text-pink-600 font-medium mt-1">March 1 – March 9 • Splitting days into AM and PM sessions</p>
+          </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {phase1.map((day, idx) => (
+              <div key={idx} className="bg-white rounded-3xl p-6 shadow-sm border border-pink-100 hover:shadow-md transition-shadow relative overflow-hidden group">
+                <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-pink-50 to-purple-50 rounded-bl-full -z-10 group-hover:scale-110 transition-transform"></div>
+                
+                <div className="flex justify-between items-start mb-4">
+                  <div>
+                    <span className="text-xs font-bold uppercase tracking-wider text-pink-400 mb-1 block">{day.date}</span>
+                    <h3 className="font-bold text-xl text-purple-900 leading-tight">{day.title}</h3>
+                  </div>
+                  <span className={`text-xs font-bold px-3 py-1 rounded-full border whitespace-nowrap ${getSubjectColor(day.subject)}`}>
+                    {day.subject}
+                  </span>
+                </div>
+                
+                <ul className="space-y-3 mt-5">
+                  {day.tasks.map((task, tidx) => {
+                    const taskId = `p1-${idx}-${tidx}`;
+                    const isCompleted = completedTasks.has(taskId);
+                    return (
+                      <li 
+                        key={tidx} 
+                        className="flex items-start gap-3 text-sm text-slate-600 cursor-pointer group"
+                        onClick={() => toggleTask(taskId)}
+                      >
+                        {isCompleted ? (
+                          <CheckCircle2 className="w-5 h-5 text-pink-500 shrink-0 mt-0.5" />
+                        ) : (
+                          <Circle className="w-5 h-5 text-slate-300 shrink-0 mt-0.5 group-hover:text-pink-400 transition-colors" />
+                        )}
+                        <span className={`leading-relaxed font-medium transition-all ${isCompleted ? 'line-through text-slate-400' : 'text-slate-700'}`}>
+                          {task}
+                        </span>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Phase 2 */}
+        <section className="pb-12">
+          <div className="mb-8 pl-4 border-l-4 border-purple-400">
+            <h2 className="text-3xl font-bold text-purple-900">Phase 2: The Final Polish</h2>
+            <p className="text-purple-600 font-medium mt-1">March 10 – March 16 • 6 Refreshers per subject & Formula Mastery</p>
+          </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {phase2.map((day, idx) => (
+              <div key={idx} className={`bg-white rounded-3xl p-6 shadow-sm border ${idx === phase2.length - 1 ? 'border-purple-300 bg-purple-50' : 'border-purple-100'} hover:shadow-md transition-shadow`}>
+                <div className="flex justify-between items-start mb-4">
+                  <div>
+                    <span className="text-xs font-bold uppercase tracking-wider text-purple-400 mb-1 block">{day.date}</span>
+                    <h3 className="font-bold text-xl text-purple-900 leading-tight">{day.title}</h3>
+                  </div>
+                  <span className={`text-xs font-bold px-3 py-1 rounded-full border ${getSubjectColor(day.subject)}`}>
+                    {day.subject}
+                  </span>
+                </div>
+                
+                <ul className="space-y-3 mt-5">
+                  {day.tasks.map((task, tidx) => {
+                    const taskId = `p2-${idx}-${tidx}`;
+                    const isCompleted = completedTasks.has(taskId);
+                    return (
+                      <li 
+                        key={tidx} 
+                        className="flex items-start gap-3 text-sm text-slate-600 cursor-pointer group"
+                        onClick={() => toggleTask(taskId)}
+                      >
+                        {isCompleted ? (
+                          <CheckCircle2 className="w-5 h-5 text-purple-500 shrink-0 mt-0.5" />
+                        ) : (
+                          <Circle className="w-5 h-5 text-slate-300 shrink-0 mt-0.5 group-hover:text-purple-400 transition-colors" />
+                        )}
+                        <span className={`leading-relaxed transition-all ${isCompleted ? 'line-through text-slate-400' : 'text-slate-700'}`}>
+                          {task}
+                        </span>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Footer */}
+        <footer className="text-center pb-8 opacity-70">
+          <p className="text-sm font-medium text-purple-800">
+            "Trust your hard work. The formulas will flow naturally." 💖
+          </p>
+        </footer>
+
+      </div>
+    </div>
+  );
+}
